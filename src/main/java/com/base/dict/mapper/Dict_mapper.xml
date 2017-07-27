@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+/**
+* åºç¡CRUDåºæ¯  Mybatis-配置文件
+* <p>完成日期：2016-11-16</p>
+* <p>邮件：1210046812@qq.com</p>
+*
+* @author qiulinq
+* @version 1.1
+*/
+-->
+<mapper namespace="com.base.dict.mapper.DictMapper">
+
+    <parameterMap type="com.base.dict.model.DictModel" id="modelMap"></parameterMap>
+    <resultMap type="com.base.dict.model.DictModel" id="resMap">
+        <id property="id" column="id" />
+        <id property="dictName" column="dict_name" />
+        <id property="dictCode" column="dict_code" />
+        <id property="status" column="status" />
+        <id property="updateTime" column="update_time" />
+        <id property="createTime" column="create_time" />
+        <id property="updateUserId" column="update_user_id" />
+        <id property="createUserId" column="create_user_id" />
+        <id property="active" column="active" />
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="save" keyProperty="id" keyColumn="id" useGeneratedKeys="true" parameterMap="modelMap" >
+        insert into t_base_dict(
+          id,
+          dict_name,
+          dict_code,
+          status,
+          update_time,
+          create_time,
+          update_user_id,
+          create_user_id,
+          active
+        )
+        values
+        (
+            #{id},
+            #{dictName},
+            #{dictCode},
+            #{status},
+            #{updateTime},
+            #{createTime},
+            #{updateUserId},
+            #{createUserId},
+            #{active}
+        )
+    </insert>
+    <!-- 修改 -->
+    <update id="update" parameterType="map" >
+
+        UPDATE t_base_dict set
+        	<if test="id != null "> id =  #{id},</if>
+        	<if test="dictName != null "> dict_name =  #{dictName},</if>
+        	<if test="dictCode != null "> dict_code =  #{dictCode},</if>
+        	<if test="status != null "> status =  #{status},</if>
+        	<if test="updateTime != null "> update_time =  #{updateTime},</if>
+        	<if test="createTime != null "> create_time =  #{createTime},</if>
+        	<if test="updateUserId != null "> update_user_id =  #{updateUserId},</if>
+        	<if test="createUserId != null "> create_user_id =  #{createUserId},</if>
+        	<if test="active != null "> active =  #{active},</if>
+    	id = #{id}
+        WHERE id = #{id}
+    </update>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="java.lang.Long">
+        update  t_base_dict set active=0 where id=#{id}
+    </delete>
+    <!-- 查询对象sql -->
+    <sql id="modelSelectSql">
+        select * from t_base_dict t where 1=1 and active = 1
+        	<if test="id != null "> and id =  #{id}</if>
+        	<if test="dictName != null "> and dict_name =  #{dictName}</if>
+        	<if test="dictCode != null "> and dict_code =  #{dictCode}</if>
+        	<if test="status != null "> and status =  #{status}</if>
+        	<if test="updateTime != null "> and update_time =  #{updateTime}</if>
+        	<if test="createTime != null "> and create_time =  #{createTime}</if>
+        	<if test="updateUserId != null "> and update_user_id =  #{updateUserId}</if>
+        	<if test="createUserId != null "> and create_user_id =  #{createUserId}</if>
+        	<if test="active != null "> and active =  #{active}</if>
+    	 <if test="orderBy != null and orderBy != ''">
+       	 ${orderBy}
+        </if>
+        <if test="orderBy == null or orderBy == ''">
+            order by id desc
+        </if>
+    </sql>
+    <!-- 查询对象列表 -->
+    <select id="queryModelList" resultMap="resMap" parameterType="map">
+        <include refid="modelSelectSql"></include>
+    </select>
+    <!-- 查询对象列表 -->
+    <select id="queryModelByParams" resultMap="resMap" parameterType="map">
+        <include refid="modelSelectSql"></include>
+    </select>
+      <!-- 根据ID查询对象 -->
+    <select id="queryModelById" resultMap="resMap" parameterType="java.lang.Long">
+        select * from t_base_dict t where id = #{id}
+    </select>
+
+    <!-- 查询MAP 属性 SQL -->
+    <sql id="queryString">
+		id as id,
+		create_User_Id as createUserId,
+		create_Time as createTime,
+		update_User_Id as updateUserId,
+		update_Time as updateTime,
+		active as active
+            ,dict_name as dictName
+            ,dict_code as dictCode
+            ,status as status
+    </sql>
+    <!-- 查询MAP 语句 -->
+    <sql id="mapSelectSql">
+        SELECT
+        <include refid="queryString"></include>
+        FROM t_base_dict t where 1=1 and active = 1
+        <if test="id != null "> and id =  #{id}</if>
+        <if test="dictName != null "> and dict_name =  #{dictName}</if>
+        <if test="dictCode != null "> and dict_code =  #{dictCode}</if>
+        <if test="status != null "> and status =  #{status}</if>
+        <if test="updateTime != null "> and update_time =  #{updateTime}</if>
+        <if test="createTime != null "> and create_time =  #{createTime}</if>
+        <if test="updateUserId != null "> and update_user_id =  #{updateUserId}</if>
+        <if test="createUserId != null "> and create_user_id =  #{createUserId}</if>
+        <if test="active != null "> and active =  #{active}</if>
+        <if test="orderBy != null and orderBy != ''">
+        ${orderBy}
+        </if>
+        <if test="orderBy == null or orderBy == ''">
+            order by id desc
+        </if>
+    </sql>
+    <!-- 按id查询MAP -->
+    <select id="queryMapById" resultType="hashmap">
+        SELECT <include refid="queryString"></include> FROM  t_base_dict  t where id=#{id}
+    </select>
+    <!-- 查询MAP对象 -->
+    <select id="queryMapByParams" resultType="hashmap" parameterType="map">
+        <include refid="mapSelectSql" />
+    </select>
+    <!-- 查询MAP列表 -->
+    <select id="queryMapList" resultType="hashmap" parameterType="map">
+        <include refid="mapSelectSql" />
+    </select>
+    <!-- 查询总记录数 -->
+    <select id="queryMapCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(*) FROM (
+        <include refid="mapSelectSql" />
+        ) t
+    </select>
+    <select id="queryModelCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT count(*) FROM (
+        <include refid="modelSelectSql" />
+        ) t
+    </select>
+    <!-- 分页查询list -->
+    <select id="queryMapPageList" resultType="hashmap" parameterType="map">
+        <include refid="mapSelectSql" />
+        LIMIT ${start},${limit}
+    </select>
+    
+    <!-- 分页查询list -->
+    <select id="queryModelPageList" resultMap="resMap" parameterType="map">
+        <include refid="modelSelectSql" />
+        LIMIT ${start},${limit}
+    </select>
+
+    <select id="checkRepeated" resultType="int" parameterType="map">
+        select count(*) from (
+        <include refid="modelSelectSql"></include>
+        <if test="id != null "> and ID != #{id}</if>
+        ) t
+    </select>
+</mapper>
