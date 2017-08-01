@@ -18,6 +18,7 @@ import java.util.Date;
  * @version 1.1
  */
 public class UserModel extends BaseModel {
+	
 
 	/************* 属性 ***********/
 	/**
