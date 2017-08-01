@@ -42,6 +42,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
 		}
 		mapper.save(model);
 		model = saveOrUpdateExtend(model);
+		afterSave(model);
 		CacheUtils.addCache(model);
 		return new ResultDtoModel(true, "新增成功");
 	}
@@ -66,6 +67,7 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
 		mapper.update(model);
 		model = saveOrUpdateExtend(model);
 		CacheUtils.addCache(model);
+		afterUpdate(model);
 		return new ResultDtoModel(true, "修改成功");
 	}
 
@@ -258,6 +260,14 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
 	}
 
 	protected ResultDtoModel beforeSave(T model) throws Exception {
+		return new SuccessDtoModel();
+	}
+
+	protected ResultDtoModel afterSave(T model) throws Exception {
+		return new SuccessDtoModel();
+	}
+
+	protected ResultDtoModel afterUpdate(T model) throws Exception {
 		return new SuccessDtoModel();
 	}
 }
